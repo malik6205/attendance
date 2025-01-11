@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Sheet</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .reset-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        .print-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .print-btn:hover {
+            background-color: #388E3C;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        @media screen and (max-width: 600px) {
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 6px;
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+        }
+
+        /* Retain background color during print */
+        @media print {
+            .print-btn, .reset-btn {
+                display: none;
+            }
+
+            .footer {
+                display: block;
+                font-size: 12px;
+                text-align: left;
+                margin-top: 5px;
+            }
+
+            /* Ensuring background colors are preserved on print */
+            table, th, td {
+                border: 1px solid #ddd;
+            }
+
+            tr {
+                background-color: inherit !important;
+            }
+
+            td, th {
+                background-color: inherit !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Group D (4th Semester)</h1>
+
+    <div class="buttons-container">
+        <button class="reset-btn" onclick="resetAttendance()">Reset Attendance</button>
+        <button class="print-btn" onclick="printAttendance()">Print Attendance</button>
+    </div>
+
+    <table id="attendanceTable">
+        <thead>
+            <tr>
+                <th>S. No.</th>
+                <th>Enrollment No.</th>
+                <th>Student Name</th>
+                <th>Present</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- JavaScript will populate this section -->
+        </tbody>
+    </table>
+
+    <div class="footer" id="dateTimeDisplay">
+        <!-- Date and Time will display here on print -->
+    </div>
+
+    <script>
+        const students = [
+            { id: "AJU/230790", name: "AVISHEK KUMAR OJHA " },
+            { id: "AJU/230795", name: "KASHISH KUMARI " },
+            { id: "AJU/230807", name: "ASHUTOSH RANJAN " },
+            { id: "AJU/230925", name: "MD FIROZ " },
+            { id: "AJU/231013", name: "SAHIL CHOUDHARY " },
+            { id: "AJU/231034", name: "IQRA AHMAD " },
+            { id: "AJU/231248", name: "NISHANT KUMAR " },
+            { id: "AJU/231363", name: "RAHUL KUMAR " },
+            { id: "AJU/231391", name: "MEGHA JOSHI " },
+            { id: "AJU/231636", name: "SHRISTI YADAV " },
+            { id: "AJU/231647", name: "AKRITI SINHA " },
+            { id: "AJU/231650", name: "RISHAV KUMAR GUPTA " },
+            { id: "AJU/231653", name: "SUNIDHI SUMAN " },
+            { id: "AJU/231662", name: "SACHIN NARAYAN DEO " },
+            { id: "AJU/231753", name: "JATIN KUMAR MAHTO " },
+            { id: "AJU/231758", name: "GAURAV BHATTACHARJEE " },
+            { id: "AJU/232066", name: "RAUNAK KUMAR " },
+            { id: "AJU/232182", name: "JAY PRAKASH MAHTO " },
+            { id: "AJU/232183", name: "DILIP KUMAR MAHTO " },
+            { id: "AJU/232323", name: "PRADYUMNA DAS " },
+            { id: "AJU/232328", name: "PRATIMA KUMARI " },
+        ];
+
+        function populateTable() {
+            const tbody = document.getElementById('attendanceTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Clear existing rows
+            students.forEach((student, index) => {
+                const row = tbody.insertRow();
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+                const cell3 = row.insertCell(2);
+                const cell4 = row.insertCell(3);
+
+                cell1.textContent = index + 1;
+                cell2.textContent = student.id;
+                cell3.textContent = student.name;
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.addEventListener('change', function () {
+                    if (checkbox.checked) {
+                        row.style.backgroundColor = '#c8e6c9'; // Light green
+                    } else {
+                        row.style.backgroundColor = ''; // Reset to original background color
+                    }
+                });
+                cell4.appendChild(checkbox);
+            });
+        }
+
+        function printAttendance() {
+            updateDateTimeDisplay();
+            window.print();
+        }
+
+        function resetAttendance() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                const row = checkbox.closest('tr');
+                row.style.backgroundColor = ''; // Reset the row background color
+            });
+        }
+
+        function updateDateTimeDisplay() {
+            const dateTimeDisplay = document.getElementById('dateTimeDisplay');
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString();
+            const formattedTime = now.toLocaleTimeString();
+            dateTimeDisplay.textContent = `Printed on: ${formattedDate} at ${formattedTime}`;
+        }
+
+        // Populate the table on page load
+        window.onload = populateTable;
+    </script>
+
+</body>
+</html>

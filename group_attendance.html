@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Attendance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Ensure the body takes full viewport height */
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .group-container {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            gap: 20px; /* Add space between buttons */
+        }
+
+        .group-button {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+        }
+
+        .group-button:hover {
+            background-color: #138496; /* Darker shade on hover */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Select a Group</h1>
+
+    <div class="group-container">
+        <button class="group-button" onclick="window.location.href='A.html'">Group A</button>
+        <button class="group-button" onclick="window.location.href='B.html'">Group B</button>
+        <button class="group-button" onclick="window.location.href='C.html'">Group C</button>
+        <button class="group-button" onclick="window.location.href='D.html'">Group D</button>
+    </div>
+
+</body>
+</html>

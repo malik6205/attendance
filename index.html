@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh; /* Ensure the body covers full viewport height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Vertically center the content */
+            align-items: center; /* Horizontally center the content */
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            margin-bottom: 30px; /* Space between heading and buttons */
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease; /* Smooth transition for hover effect */
+        }
+
+        #regular-attendance {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #regular-attendance:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+        #group-attendance {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #group-attendance:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        .group-button {
+            background-color: #ffc107;
+            color: black;
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        .group-button:hover {
+            background-color: #e0a800; /* Darker yellow on hover */
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>B PHARMACY (2nd Year , 4th Sem)</h1>
+
+    <div class="button-container">
+        <button id="regular-attendance" onclick="window.location.href='ass.html'">Regular Attendance</button>
+        <button id="group-attendance" onclick="window.location.href='group_attendance.html'">Group Attendance</button>
+    </div>
+
+</body>
+</html>
