@@ -6,26 +6,25 @@
     <title>Attendance Options</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            height: 100vh; /* Ensure the body covers full viewport height */
+            font-family: Brush Script, Cambria;
+            margin: 30px;
+            height: 10vh;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Vertically center the content */
-            align-items: center; /* Horizontally center the content */
-            background-color: #f4f4f4;
+            align-items: center;
+            background-color:  #F08080;
         }
 
-        h1 {
-            margin-bottom: 30px; /* Space between heading and buttons */
+        h2 {
+            margin-bottom: 20px;
         }
 
         .button-container {
             display: flex;
-            flex-direction: column; /* Stack buttons vertically */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 30px;
         }
 
         button {
@@ -34,7 +33,7 @@
             border: none;
             cursor: pointer;
             border-radius: 8px;
-            transition: all 0.3s ease; /* Smooth transition for hover effect */
+            transition: all 0.3s ease;
         }
 
         #regular-attendance {
@@ -43,7 +42,7 @@
         }
 
         #regular-attendance:hover {
-            background-color: #218838; /* Darker green on hover */
+            background-color: #218838;
         }
 
         #group-attendance {
@@ -52,7 +51,7 @@
         }
 
         #group-attendance:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+            background-color: #0056b3;
         }
 
         .group-button {
@@ -70,11 +69,13 @@
         a {
             text-decoration: none;
         }
+
     </style>
 </head>
 <body>
 
-    <h1>B PHARMACY (2nd Year , 4th Sem)</h1>
+    <h2>B PHARMACY</h2>
+    <h3>(2nd Year , 4th Sem)</h3>
 
     <div class="button-container">
         <button id="regular-attendance" onclick="window.location.href='ass.html'">Regular Attendance</button>

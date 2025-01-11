@@ -11,20 +11,18 @@
             margin-top: 100px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 100vh; /* Ensure the body takes full viewport height */
-            background-color: #f4f4f4;
+            height: 100vh;
+            background-color: #808080;
         }
 
-        h1 {
+        h2 {
             margin-bottom: 30px;
         }
 
         .group-container {
             display: flex;
-            flex-direction: column; /* Stack buttons vertically */
-            gap: 20px; /* Add space between buttons */
+            gap: 30px;
         }
 
         .group-button {
@@ -35,17 +33,17 @@
             font-size: 16px;
             cursor: pointer;
             border-radius: 8px;
-            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+            transition: background-color 0.3s ease;
         }
 
         .group-button:hover {
-            background-color: #138496; /* Darker shade on hover */
+            background-color: #138496;
         }
     </style>
 </head>
 <body>
 
-    <h1>Select a Group</h1>
+    <h2>Choose your group Group</h2>
 
     <div class="group-container">
         <button class="group-button" onclick="window.location.href='A.html'">Group A</button>
