@@ -3,54 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Group Attendance</title>
+    <title>Group</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 100px;
+            font-family: Brush Script, Cambria;
+            margin: 30px;
+            height: 10vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
-            background-color: #808080;
+            background-color:  	#D3D3D3;
         }
 
         h2 {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
-        .group-container {
+        .button-container {
             display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             gap: 30px;
         }
 
-        .group-button {
-            background-color: #17a2b8;
-            color: white;
-            border: none;
+        button {
             padding: 15px 30px;
             font-size: 16px;
+            border: none;
             cursor: pointer;
             border-radius: 8px;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+        }
+
+        #regular-attendance {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #regular-attendance:hover {
+            background-color: #218838;
+        }
+
+        #group-attendance {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #group-attendance:hover {
+            background-color: #0056b3;
+        }
+
+        .group-button {
+            background-color: #ffc107;
+            color: black;
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
         }
 
         .group-button:hover {
-            background-color: #138496;
+            background-color: #e0a800; /* Darker yellow on hover */
         }
+
+        a {
+            text-decoration: none;
+        }
+        #shayari {
+            font-size: 18px;
+            color: #333;
+            margin: 20px auto;
+            max-width: 600px;
+            line-height: 1.6;
+            border: 2px solid #ccc;
+            padding: 20px;
+            background-color: #D3D3D3;
+            border-radius: 10px;
+        }
+
     </style>
 </head>
 <body>
 
-    <h2>Choose your group Group</h2>
+    <h2 style="text-decoration: underline;">❤️ B Pharmacy (4th Sem) ❤️</h2>
 
-    <div class="group-container">
-        <button class="group-button" onclick="window.location.href='A.html'">Group A</button>
-        <button class="group-button" onclick="window.location.href='B.html'">Group B</button>
-        <button class="group-button" onclick="window.location.href='C.html'">Group C</button>
-        <button class="group-button" onclick="window.location.href='D.html'">Group D</button>
+    <div class="button-container">
+        <button id="Group A" onclick="window.location.href='A.html'">Group A</button>
+        <button id="Group B" onclick="window.location.href='B.html'">Group B</button>
+        <button id="Group C" onclick="window.location.href='C.html'">Group C</button>
+        <button id="Group D" onclick="window.location.href='D.html'">Group D</button>
     </div>
 
+ <h2 style="text-decoration: underline;">❤️ Enjoy ❤️</h2>
+    <div id="shayari">Loading Shayari...</div>
+
+    <script>
+        // Shayari list
+        const shayariList = [
+    "Zindagi ek safar hai suhana, yahaan kal kya ho kisne jaana.",
+    "Mohabbat bhi zindagi ki tarah hoti hai, har mod aasan nahi hota.",
+    "Safar khubsoorat hai manzil se bhi, bas chalte rehne ka hosla chahiye.",
+    "Har khushi ka raaz mohabbat hai, aur har gham ka ilaj waqt hai.",
+    "Aansoon chhupane ki aadat hai mujhe, khushi me bhi muskuraane ki aadat hai mujhe.",
+    "Chalte rahein toh raaste mil hi jaate hain, ruke toh mitti bhi saath chhod jaati hai.",
+    "Rishta woh nahi jisme roz baat ho, rishta woh hai jisme har baat me yaad ho.",
+    "Mohabbat sirf ek ahsaas nahi, balki zindagi jeene ka andaz hai.",
+    "Dil se dawa karo toh har dua puri hoti hai, sirf sachche jazbaat ki zarurat hoti hai.",
+    "Na samajhna ki main bhool gaya hoon tujhe, meri zindagi me har mod par tera hi zikr hota hai.",
+    "Har dard ko seh kar bhi muskurana seekha hai, mohabbat se milne wali chot ko chhupana seekha hai.",
+    "Safar zindagi ka chhota ho ya lamba, manzil ka intezaar hamesha khoobsurat hota hai.",
+    "Phoolon ki khushboo hawa me chhup jaati hai, mohabbat ki baatein labon pe ruk jaati hain.",
+    "Chup rehne wale log aksar pyaar zyada karte hain, bas izhaar nahi karte.",
+    "Duniya me sabse khoobsurat ehsaas mohabbat hai, aur usse bhi zyada khoobsurat yaadein hoti hain."
+];
+
+
+        // Function to update shayari
+        function updateShayari() {
+            const randomIndex = Math.floor(Math.random() * shayariList.length);
+            document.getElementById('shayari').innerText = shayariList[randomIndex];
+        }
+
+        // Show a new shayari every 3 minutes (180000 ms)
+        setInterval(updateShayari, 6000000);
+
+        // Display a shayari immediately on load
+        updateShayari();
+    </script>
 </body>
 </html>
