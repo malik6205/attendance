@@ -17,9 +17,18 @@
       min-height: 100vh;
       text-align: center;
     }
-    h2 {
-      margin-bottom: 20px;
-    }
+   h1 {
+            text-align: center;
+            margin-bottom: 2px;
+        }
+        h2 {
+            text-align: center;
+             margin-bottom: 2px;
+        }
+        h3 {
+            text-align: center;
+             margin-bottom: 20px;
+        }
     .buttons-container {
       display: flex;
       justify-content: center;
@@ -102,13 +111,22 @@
         color: #000;
       }
       /* Header adjustments for printed page */
-      h2 {
-        font-size: 24pt;
-        margin-bottom: 10mm;
-      }
+         h1 {
+            text-align: center;
+            margin-bottom: 2px;
+        }
+        h2 {
+            text-align: center;
+             margin-bottom: 2px;
+        }
+        h3 {
+            text-align: center;
+             margin-bottom: 20px;
+        }
       #dateTimeDisplay {
         font-size: 14pt;
-        margin-bottom: 10mm;
+        margin-bottom: 5mm;
+         text-align: left;
       }
       /* Hide buttons on print */
       .print-btn, .reset-btn, .buttons-container {
@@ -126,10 +144,7 @@
         text-align: center;
         font-size: 12pt;
       }
-      /* Only display rows with the "present" class */
-      tr:not(.present) {
-        display: none;
-      }
+
       /* Show attendance counts on print */
       .counts {
         display: block !important;
@@ -138,16 +153,41 @@
         text-align: center;
       }
     }
+    .subject-select select {
+    padding: 15px 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: scale(1);
+    font-size: 16px; /* Increased font size */
+}
+
+
   </style>
 </head>
 <body>
-  <h2>Group B(4th Semester)</h2>
+ <h1>Today's Attendance Sheet</h1>
+<h2>4th Semester (Batch:- 2023-2027)</h2>
+
 
   <div class="buttons-container">
     <button class="reset-btn" onclick="resetAttendance()">Reset Attendance</button>
     <button class="print-btn" onclick="printAttendance()">Print Attendance</button>
   </div>
-
+<div class="subject-select">
+    <label for="subject">Subject:</label>
+    <select id="subject">
+        <option value="Math">Med. Chem I (Practical)</option>
+        <option value="Physics">Ph. Cog. & Phytochem. I(Practical)</option>
+        <option value="Chemistry">Ph. Cology I(Practical)</option>
+        <option value="Computer Science">P.P II (Practical)</option>
+        <option value="Computer Science">Seminar or Function</option>
+    </select>
+</div>
+ <div id="dateTimeDisplay"></div>
   <table id="attendanceTable">
     <thead>
       <tr>
@@ -166,34 +206,32 @@
   <div class="counts" id="attendanceCounts"></div>
 
   <!-- Display the print date (if any) -->
-  <div id="dateTimeDisplay"></div>
+
 
   <script>
     const students = [
-      { id: "AJU/230151", name: "ARCHANA KUMARI" },
-            { id: "AJU/230160", name: "KHUSHI KUMARI " },
-            { id: "AJU/230162", name: "ADITYA KUMAR " },
-            { id: "AJU/230174", name: "BIKAS KUMAR BALA " },
-            { id: "AJU/230177", name: "MD ABUTAHA " },
-            { id: "AJU/230179", name: "DHIRAJ KUMAR DAS " },
-            { id: "AJU/230203", name: "ADITYA KUMAR " },
-            { id: "AJU/230207", name: "VIVEK RAJ " },
-            { id: "AJU/230210", name: "AJIT KUMAR " },
-            { id: "AJU/230211", name: "MONU KUMAR " },
-            { id: "AJU/230223", name: "PRIYANSHI PANDEY " },
-            { id: "AJU/230230", name: "SUMIT KUMAR MISHRA " },
-            { id: "AJU/230244", name: "MRITUNJAY KUMAR " },
-            { id: "AJU/230252", name: "PRATIK SHARMA " },
-            { id: "AJU/230263", name: "ANISH KUMAR YADAV " },
-            { id: "AJU/230280", name: "SHOAIB AKHTAR " },
-            { id: "AJU/230287", name: "SRITI PAUL " },
-            { id: "AJU/230311", name: "ISHA SHARMA " },
-            { id: "AJU/230333", name: "ADITYA KUMAR SHARMA " },
-            { id: "AJU/230344", name: "ALIYA GHAZAL " },
-            { id: "AJU/230398", name: "MADHAV KUMAR " },
-            { id: "AJU/230410", name: "PRIYA KUMARI " },
-            { id: "AJU/230420", name: "RAJ KUMAR YADAV " },
-            { id: "AJU/230434", name: "ANAMIKA KUMARI " },
+            { id: "AJU/230471", name: "HARI PRIYA PANDA " },
+            { id: "AJU/230476", name: "ANISHA SHARMA " },
+            { id: "AJU/230495", name: "APPU MAHATO " },
+            { id: "AJU/230502", name: "MD WASIM ANSARI " },
+            { id: "AJU/230527", name: "NANDANI KUMARI PANDEY " },
+            { id: "AJU/230545", name: "BAIJNATH KUMAR SAHANI " },
+            { id: "AJU/230550", name: "ROHIT RAJ " },
+            { id: "AJU/230558", name: "PRIYANKA KUMARI " },
+            { id: "AJU/230563", name: "KHUSHI SHARMA " },
+            { id: "AJU/230565", name: "RAMANAND KUMAR" },
+            { id: "AJU/230567", name: "NAVEEN MARDI" },
+            { id: "AJU/230598", name: "ANUPAMA GORAI" },
+            { id: "AJU/230642", name: "CHAMPA KUMARI" },
+            { id: "AJU/230645", name: "KULDIP MAHTO" },
+            { id: "AJU/230670", name: "DHARMENDRA KUMAR MAHTO " },
+            { id: "AJU/230680", name: "ASHISH YADAV " },
+            { id: "AJU/230685", name: "SURAJ KUMAR CHOUDHARY " },
+            { id: "AJU/230701", name: "MOHAMMAD SABA UDDIN " },
+            { id: "AJU/230704", name: "ANIMESH KUMAR BHAKAT " },
+            { id: "AJU/230712", name: "ANJALI KUMARI " },
+            { id: "AJU/230758", name: "AMAN KUMAR " },
+            { id: "AJU/230783", name: "ADARSH KUMAR " },
     ];
 
     // Global object to store attendance data
@@ -203,7 +241,7 @@
     function populateTable() {
       const tbody = document.getElementById('attendanceTable').getElementsByTagName('tbody')[0];
       tbody.innerHTML = ''; // Clear existing rows
-      
+
       // Retrieve saved attendance data from localStorage, if available
       const storedAttendance = localStorage.getItem("attendanceData");
       attendanceData = storedAttendance ? JSON.parse(storedAttendance) : {};
@@ -260,7 +298,7 @@
       }
       const absentCount = total - presentCount;
       document.getElementById('attendanceCounts').textContent =
-        `Total Students: ${total} | Present: ${presentCount} | Absent: ${absentCount}`;
+        `Present: ${presentCount}  |  Absent: ${absentCount}  |  Total Students: ${total} `;
     }
 
     // Update the printed date display from localStorage
@@ -275,7 +313,7 @@
         const now = new Date();
         const formattedDate = now.toLocaleDateString();
         const formattedTime = now.toLocaleTimeString();
-        const printDate = `Printed on: ${formattedDate} at ${formattedTime}`;
+        const printDate = `Dated:- ${formattedDate} at ${formattedTime}`;
         localStorage.setItem("printDate", printDate);
       }
       updateDateTimeDisplay();
