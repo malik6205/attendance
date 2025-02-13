@@ -17,9 +17,18 @@
       min-height: 100vh;
       text-align: center;
     }
-    h2 {
-      margin-bottom: 20px;
-    }
+   h1 {
+            text-align: center;
+            margin-bottom: 2px;
+        }
+        h2 {
+            text-align: center;
+             margin-bottom: 2px;
+        }
+        h3 {
+            text-align: center;
+             margin-bottom: 20px;
+        }
     .buttons-container {
       display: flex;
       justify-content: center;
@@ -102,13 +111,22 @@
         color: #000;
       }
       /* Header adjustments for printed page */
-      h2 {
-        font-size: 24pt;
-        margin-bottom: 10mm;
-      }
+         h1 {
+            text-align: center;
+            margin-bottom: 2px;
+        }
+        h2 {
+            text-align: center;
+             margin-bottom: 2px;
+        }
+        h3 {
+            text-align: center;
+             margin-bottom: 20px;
+        }
       #dateTimeDisplay {
         font-size: 14pt;
-        margin-bottom: 10mm;
+        margin-bottom: 5mm;
+         text-align: left;
       }
       /* Hide buttons on print */
       .print-btn, .reset-btn, .buttons-container {
@@ -126,10 +144,7 @@
         text-align: center;
         font-size: 12pt;
       }
-      /* Only display rows with the "present" class */
-      tr:not(.present) {
-        display: none;
-      }
+
       /* Show attendance counts on print */
       .counts {
         display: block !important;
@@ -138,16 +153,41 @@
         text-align: center;
       }
     }
+    .subject-select select {
+    padding: 15px 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: scale(1);
+    font-size: 16px; /* Increased font size */
+}
+
+
   </style>
 </head>
 <body>
-  <h2>Group C(4th Semester)</h2>
+ <h1>Today's Attendance Sheet</h1>
+<h2>4th Semester (Batch:- 2023-2027)</h2>
+
 
   <div class="buttons-container">
     <button class="reset-btn" onclick="resetAttendance()">Reset Attendance</button>
     <button class="print-btn" onclick="printAttendance()">Print Attendance</button>
   </div>
-
+<div class="subject-select">
+    <label for="subject">Subject:</label>
+    <select id="subject">
+        <option value="Math">Med. Chem I (Practical)</option>
+        <option value="Physics">Ph. Cog. & Phytochem. I(Practical)</option>
+        <option value="Chemistry">Ph. Cology I(Practical)</option>
+        <option value="Computer Science">P.P II (Practical)</option>
+        <option value="Computer Science">Seminar or Function</option>
+    </select>
+</div>
+ <div id="dateTimeDisplay"></div>
   <table id="attendanceTable">
     <thead>
       <tr>
@@ -166,11 +206,11 @@
   <div class="counts" id="attendanceCounts"></div>
 
   <!-- Display the print date (if any) -->
-  <div id="dateTimeDisplay"></div>
+
 
   <script>
     const students = [
-      { id: "AJU/230471", name: "HARI PRIYA PANDA " },
+            { id: "AJU/230471", name: "HARI PRIYA PANDA " },
             { id: "AJU/230476", name: "ANISHA SHARMA " },
             { id: "AJU/230495", name: "APPU MAHATO " },
             { id: "AJU/230502", name: "MD WASIM ANSARI " },
@@ -201,7 +241,7 @@
     function populateTable() {
       const tbody = document.getElementById('attendanceTable').getElementsByTagName('tbody')[0];
       tbody.innerHTML = ''; // Clear existing rows
-      
+
       // Retrieve saved attendance data from localStorage, if available
       const storedAttendance = localStorage.getItem("attendanceData");
       attendanceData = storedAttendance ? JSON.parse(storedAttendance) : {};
@@ -258,7 +298,7 @@
       }
       const absentCount = total - presentCount;
       document.getElementById('attendanceCounts').textContent =
-        `Total Students: ${total} | Present: ${presentCount} | Absent: ${absentCount}`;
+        `Present: ${presentCount}  |  Absent: ${absentCount}  |  Total Students: ${total} `;
     }
 
     // Update the printed date display from localStorage
@@ -273,7 +313,7 @@
         const now = new Date();
         const formattedDate = now.toLocaleDateString();
         const formattedTime = now.toLocaleTimeString();
-        const printDate = `Printed on: ${formattedDate} at ${formattedTime}`;
+        const printDate = `Dated:- ${formattedDate} at ${formattedTime}`;
         localStorage.setItem("printDate", printDate);
       }
       updateDateTimeDisplay();
