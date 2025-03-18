@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Attendance Sheet</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <style>
-    /* Screen Styles */
     body {
       font-family: Arial, sans-serif;
       margin: 10px;
@@ -17,18 +19,18 @@
       min-height: 100vh;
       text-align: center;
     }
-   h1 {
-            text-align: center;
-            margin-bottom: 2px;
-        }
-        h2 {
-            text-align: center;
-             margin-bottom: 2px;
-        }
-        h3 {
-            text-align: center;
-             margin-bottom: 20px;
-        }
+    h1 {
+      text-align: center;
+      margin-bottom: 2px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 2px;
+    }
+    u {
+      text-align: center;
+      margin-bottom: 20px;
+    }
     .buttons-container {
       display: flex;
       justify-content: center;
@@ -57,6 +59,19 @@
     .print-btn:hover {
       background-color: #388E3C;
     }
+    .share-btn {
+      background-color: #2196F3;
+      color: white;
+      padding: 10px 20px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .share-btn:hover {
+      background-color: #1976D2;
+    }
     table {
       width: 80%;
       border-collapse: collapse;
@@ -82,7 +97,19 @@
       width: 80%;
       text-align: center;
     }
-    /* Responsive design for smaller screens */
+    #printHeader {
+      margin: 10px 0;
+      font-size: 16px;
+      text-align: center;
+    }
+    @media print {
+      .subject-select {
+        display: none;
+      }
+    }
+    .print-mode .subject-select {
+      display: none;
+    }
     @media screen and (max-width: 600px) {
       table {
         font-size: 12px;
@@ -99,7 +126,6 @@
         width: 95%;
       }
     }
-    /* Print Styles */
     @media print {
       @page {
         margin: 15mm;
@@ -110,29 +136,13 @@
         font-family: Arial, sans-serif;
         color: #000;
       }
-      /* Header adjustments for printed page */
-         h1 {
-            text-align: center;
-            margin-bottom: 2px;
-        }
-        h2 {
-            text-align: center;
-             margin-bottom: 2px;
-        }
-        h3 {
-            text-align: center;
-             margin-bottom: 20px;
-        }
-      #dateTimeDisplay {
-        font-size: 14pt;
-        margin-bottom: 5mm;
-         text-align: left;
+      h1, h2, u {
+        text-align: center;
+        margin-bottom: 2px;
       }
-      /* Hide buttons on print */
-      .print-btn, .reset-btn, .buttons-container {
+      .print-btn, .reset-btn, .buttons-container, #shareButton {
         display: none !important;
       }
-      /* Table styling for print */
       table {
         width: 100%;
         border-collapse: collapse;
@@ -144,51 +154,70 @@
         text-align: center;
         font-size: 12pt;
       }
-
-      /* Show attendance counts on print */
       .counts {
         display: block !important;
         font-size: 14pt;
         margin-top: 10mm;
         text-align: center;
       }
+      #printHeader {
+        display: block;
+      }
     }
-    .subject-select select {
-    padding: 15px 30px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transform: scale(1);
-    font-size: 16px; /* Increased font size */
-}
-
-
+    .print-mode #printHeader {
+      font-size: 14pt;
+      margin-bottom: 5mm;
+      text-align: center;
+    }
+    .print-mode table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 auto 10mm auto;
+    }
+    .print-mode th,
+    .print-mode td {
+      border: 1px solid #000;
+      padding: 10px;
+      text-align: center;
+      font-size: 12pt;
+    }
+    .print-mode .counts {
+      display: block;
+      font-size: 14pt;
+      margin-top: 10mm;
+      text-align: center;
+    }
+    .print-mode .buttons-container,
+    .print-mode .reset-btn,
+    .print-mode .print-btn,
+    .print-mode #shareButton {
+      display: none;
+    }
   </style>
 </head>
 <body>
- <h1>Today's Attendance Sheet</h1>
-<h2>4th Semester (Batch:- 2023-2027)</h2>
-
-
+  <h1>Today's Attendance Sheet</h1>
+  <h2>4th Semester (Batch:- 2023-2027)</h2>
+  <u>Group A</u>
+  
   <div class="buttons-container">
     <button class="reset-btn" onclick="resetAttendance()">Reset Attendance</button>
     <button class="print-btn" onclick="printAttendance()">Print Attendance</button>
+    <button id="shareButton" class="share-btn">Share Attendance</button>
   </div>
-<div class="subject-select">
+  
+  <div class="subject-select">
     <label for="subject">Subject:</label>
     <select id="subject">
-        <option value="Math">Med. Chem I (Theory)</option>
-        <option value="Physics">Ph. Cog. & Phytochem. I(Theory)</option>
-        <option value="Chemistry">Ph. Cology I(Theory)</option>
-        <option value="Computer Science">P.P II (Theory)</option>
-        <option value="Computer Science">POC III (Theory)</option>
-        <option value="Computer Science">Seminar or Function</option>
+      <option value="Math">Med. Chem I (Practical)</option>
+      <option value="Physics">Ph. Cog. & Phytochem. I(Practical)</option>
+      <option value="Chemistry">Ph. Cology I(Practical)</option>
+      <option value="Computer Science">P.P II (Practical)</option>
+      <option value="Computer Science">Seminar or Function</option>
     </select>
-</div>
- <div id="dateTimeDisplay"></div>
+  </div>
+  <div id="printHeader"></div>
+  
   <table id="attendanceTable">
     <thead>
       <tr>
@@ -202,13 +231,12 @@
       <!-- Table rows are dynamically populated -->
     </tbody>
   </table>
-
-  <!-- Attendance counts (visible on screen and in print) -->
+  
   <div class="counts" id="attendanceCounts"></div>
-
-  <!-- Display the print date (if any) -->
-
-
+  
+  <!-- Pie Chart -->
+  <canvas id="attendanceChart" style="max-width: 80%; margin-top: 20px;"></canvas>
+  
   <script>
     const students = [
       { id: "AJU/230001", name: "BIKRAM KISHORE PANDA" },
