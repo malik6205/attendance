@@ -73,6 +73,7 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
+    /* Existing buttons */
     #regular-attendance {
       background-color: #28a745;
       color: white;
@@ -90,6 +91,17 @@
     
     #group-attendance:hover {
       background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    /* New button with a different color (red theme) */
+    #extra-attendance {
+      background-color: #dc3545;
+      color: white;
+    }
+    
+    #extra-attendance:hover {
+      background-color: #c82333;
       transform: scale(1.05);
     }
 
@@ -145,6 +157,10 @@
     </button>
     <button id="group-attendance" onclick="window.location.href='group_attendance.html'">
       😑❤Group Attendance❤😑
+    </button>
+    <!-- New Button with a different color -->
+    <button id="Ph 1 - Seminar list" onclick="window.location.href='index1.html'">
+      😑Extra Attendance😑
     </button>
   </div>
   <!-- Critical image with high fetch priority -->
