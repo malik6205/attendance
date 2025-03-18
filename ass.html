@@ -333,40 +333,36 @@
             { id: "AJU/232328", name: "PRATIMA KUMARI " },
     ];
 
-    // Global object to store attendance data
     let attendanceData = {};
-
-    // Populate the attendance table and load saved data from localStorage
+    let chart;
+    
+    // Populate the attendance table and restore saved data from localStorage
     function populateTable() {
       const tbody = document.getElementById('attendanceTable').getElementsByTagName('tbody')[0];
-      tbody.innerHTML = ''; // Clear existing rows
-
-      // Retrieve saved attendance data from localStorage, if available
+      tbody.innerHTML = '';
       const storedAttendance = localStorage.getItem("attendanceData");
       attendanceData = storedAttendance ? JSON.parse(storedAttendance) : {};
-
+      
       students.forEach((student, index) => {
         const row = tbody.insertRow();
         const cell1 = row.insertCell(0);
         const cell2 = row.insertCell(1);
         const cell3 = row.insertCell(2);
         const cell4 = row.insertCell(3);
-
+        
         cell1.textContent = index + 1;
         cell2.textContent = student.id;
         cell3.textContent = student.name;
-
+        
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-
-        // Restore saved attendance state, if available
+        
         if (attendanceData[student.id]) {
           checkbox.checked = true;
-          row.style.backgroundColor = '#c8e6c9'; // Light green for present
+          row.style.backgroundColor = '#c8e6c9';
           row.classList.add('present');
         }
-
-        // Listen for changes on the checkbox to update attendance data
+        
         checkbox.addEventListener('change', function () {
           if (checkbox.checked) {
             row.style.backgroundColor = '#c8e6c9';
@@ -377,7 +373,6 @@
             row.classList.remove('present');
             attendanceData[student.id] = false;
           }
-          // Save the updated attendance data to localStorage
           localStorage.setItem("attendanceData", JSON.stringify(attendanceData));
           updateCounts();
         });
@@ -385,8 +380,8 @@
       });
       updateCounts();
     }
-
-    // Update the counts of total, present, and absent students
+    
+    // Update the attendance counts display and update the pie chart
     function updateCounts() {
       const total = students.length;
       let presentCount = 0;
@@ -398,28 +393,65 @@
       const absentCount = total - presentCount;
       document.getElementById('attendanceCounts').textContent =
         `Present: ${presentCount}  |  Absent: ${absentCount}  |  Total Students: ${total} `;
+      
+      updateChart(presentCount, absentCount);
     }
-
-    // Update the printed date display from localStorage
-    function updateDateTimeDisplay() {
-      const storedDate = localStorage.getItem("printDate");
-      document.getElementById("dateTimeDisplay").textContent = storedDate ? storedDate : "";
-    }
-
-    // Print attendance: store the current date in localStorage (if not already set) and print
-    function printAttendance() {
-      if (!localStorage.getItem("printDate")) {
-        const now = new Date();
-        const formattedDate = now.toLocaleDateString();
-        const formattedTime = now.toLocaleTimeString();
-        const printDate = `Dated:- ${formattedDate} at ${formattedTime}`;
-        localStorage.setItem("printDate", printDate);
+    
+    // Update or create the pie chart and display percentages using datalabels
+    function updateChart(presentCount, absentCount) {
+      const ctx = document.getElementById('attendanceChart').getContext('2d');
+      if (chart) {
+        chart.data.datasets[0].data = [presentCount, absentCount];
+        chart.update();
+      } else {
+        chart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: ['Present', 'Absent'],
+            datasets: [{
+              data: [presentCount, absentCount],
+              backgroundColor: ['#4CAF50', '#f44336']
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'bottom'
+              },
+              datalabels: {
+                formatter: (value, context) => {
+                  let sum = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                  let percentage = ((value / sum) * 100).toFixed(1) + "%";
+                  return percentage;
+                },
+                color: '#fff'
+              }
+            }
+          },
+          plugins: [ChartDataLabels]
+        });
       }
-      updateDateTimeDisplay();
+    }
+    
+    // Update the header that will be printed (shows subject and current date/time)
+    function updatePrintHeader() {
+      const subjectElement = document.getElementById("subject");
+      const subjectValue = subjectElement.options[subjectElement.selectedIndex].text;
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString();
+      const formattedTime = now.toLocaleTimeString();
+      document.getElementById("printHeader").innerHTML =
+        `Subject: ${subjectValue} <br> Dated: ${formattedDate} at ${formattedTime}`;
+    }
+    
+    // Print attendance – update the print header and then call print
+    function printAttendance() {
+      updatePrintHeader();
       window.print();
     }
-
-    // Reset attendance: uncheck all boxes, and clear stored attendance data and print date
+    
+    // Reset attendance data
     function resetAttendance() {
       const checkboxes = document.querySelectorAll('#attendanceTable tbody input[type="checkbox"]');
       checkboxes.forEach(checkbox => {
@@ -428,19 +460,56 @@
         row.style.backgroundColor = '';
         row.classList.remove('present');
       });
-      // Clear saved data
       localStorage.removeItem("attendanceData");
-      localStorage.removeItem("printDate");
       attendanceData = {};
       updateCounts();
-      updateDateTimeDisplay();
     }
-
-    // On page load, populate the table and update the printed date display
+    
+    // Share attendance: update header, set print mode, and generate PDF with a filename that includes today's date and subject name
+    document.getElementById("shareButton").addEventListener("click", function() {
+      updatePrintHeader();
+      document.body.classList.add("print-mode");
+      const element = document.body;
+      const subjectElement = document.getElementById("subject");
+      const subjectValue = subjectElement.options[subjectElement.selectedIndex].text;
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString().replace(/\//g, '-');
+      const filename = `${formattedDate}-${subjectValue}.pdf`;
+      
+      const opt = {
+        margin: 0.5,
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      
+      html2pdf().set(opt).from(element).outputPdf('blob').then(function(blob) {
+        document.body.classList.remove("print-mode");
+        
+        if (navigator.canShare && navigator.canShare({ files: [new File([blob], filename, { type: 'application/pdf' })] })) {
+          const file = new File([blob], filename, { type: 'application/pdf' });
+          navigator.share({
+            title: 'Attendance Report',
+            text: 'Please find the attendance report attached.',
+            files: [file],
+          })
+          .then(() => console.log('Share successful'))
+          .catch((error) => console.error('Error sharing:', error));
+        } else {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+      });
+    });
+    
     window.onload = function() {
       populateTable();
-      updateDateTimeDisplay();
-    };
+    }
   </script>
 </body>
 </html>
