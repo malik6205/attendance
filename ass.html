@@ -1,118 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, user-scalable=no" />
-<title>Attendance Sheet</title>
-
-<!-- External Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    text-align: center;
-  }
-  .editable-title {
-    font-size: 2em;
-    font-weight: bold;
-    color: inherit;
-    text-align: center;
-    border: none;
-    background: transparent;
-    width: 100%;
-    margin: 10px 0;
-    padding: 0;
-    outline: none;
-  }
-  h2 {
-    text-align: center;
-    margin-bottom: 2px;
-  }
-  .buttons-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  button {
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-  }
-  .reset-btn { background-color: #f44336; color: white; }
-  .reset-btn:hover { background-color: #d32f2f; }
-  .print-btn { background-color: #4CAF50; color: white; }
-  .print-btn:hover { background-color: #388E3C; }
-  .share-btn { background-color: #2196F3; color: white; }
-  .share-btn:hover { background-color: #1976D2; }
-  table {
-    width: 80%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-  }
-  th { background-color: #f2f2f2; }
-  .counts {
-    margin-top: 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    background-color: #e0f7fa;
-    padding: 10px;
-    border: 2px solid #4dd0e1;
-    border-radius: 5px;
-    width: 80%;
-    text-align: center;
-  }
-  #printHeader { margin: 10px 0; font-size: 16px; text-align: center; }
-  @media print {
-    .buttons-container, .subject-select, #shareButton { display: none !important; }
-    .editable-title { border: none; }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Attendance Sheet</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      text-align: center;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 2px;
+    }
+    u {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .buttons-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+    .reset-btn {
+      background-color: #f44336;
+      color: white;
+    }
+    .reset-btn:hover {
+      background-color: #d32f2f;
+    }
+    .print-btn {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .print-btn:hover {
+      background-color: #388E3C;
+    }
+    .share-btn {
+      background-color: #2196F3;
+      color: white;
+      padding: 10px 20px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .share-btn:hover {
+      background-color: #1976D2;
+    }
+    table {
+      width: 80%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .counts {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      background-color: #e0f7fa;
+      padding: 10px;
+      border: 2px solid #4dd0e1;
+      border-radius: 5px;
+      width: 80%;
+      text-align: center;
+    }
+    #printHeader {
+      margin: 10px 0;
+      font-size: 16px;
+      text-align: center;
+    }
+    @media print {
+      .subject-select {
+        display: none;
+      }
+    }
+    .print-mode .subject-select {
+      display: none;
+    }
+    @media screen and (max-width: 600px) {
+      table {
+        font-size: 12px;
+      }
+      th, td {
+        padding: 6px;
+      }
+      button {
+        padding: 8px 16px;
+        font-size: 12px;
+      }
+      .counts {
+        font-size: 14px;
+        width: 95%;
+      }
+    }
+    @media print {
+      @page {
+        margin: 15mm;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        color: #000;
+      }
+      h1, h2, u {
+        text-align: center;
+        margin-bottom: 2px;
+      }
+      .print-btn, .reset-btn, .buttons-container, #shareButton {
+        display: none !important;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 auto 10mm auto;
+      }
+      th, td {
+        border: 1px solid #000;
+        padding: 10px;
+        text-align: center;
+        font-size: 12pt;
+      }
+      .counts {
+        display: block !important;
+        font-size: 14pt;
+        margin-top: 10mm;
+        text-align: center;
+      }
+      #printHeader {
+        display: block;
+      }
+    }
+    .print-mode #printHeader {
+      font-size: 14pt;
+      margin-bottom: 5mm;
+      text-align: center;
+    }
+    .print-mode table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 auto 10mm auto;
+    }
+    .print-mode th,
+    .print-mode td {
+      border: 1px solid #000;
+      padding: 10px;
+      text-align: center;
+      font-size: 12pt;
+    }
+    .print-mode .counts {
+      display: block;
+      font-size: 14pt;
+      margin-top: 10mm;
+      text-align: center;
+    }
+    .print-mode .buttons-container,
+    .print-mode .reset-btn,
+    .print-mode .print-btn,
+    .print-mode #shareButton {
+      display: none;
+    }
+  </style>
 </head>
-
 <body>
-  <!-- Editable title -->
-  <input id="attendanceTitle" class="editable-title" value="Today's Attendance Sheet" />
-
+  <h1>Today's Attendance Sheet</h1>
   <h2>5th Semester (Batch:- 2023-2027)</h2>
-
+  
   <div class="buttons-container">
     <button class="reset-btn" onclick="resetAttendance()">Reset Attendance</button>
     <button class="print-btn" onclick="printAttendance()">Print Attendance</button>
     <button id="shareButton" class="share-btn">Share Attendance</button>
   </div>
-
+  
   <div class="subject-select">
     <label for="subject">Subject:</label>
     <select id="subject">
-      <option value="Med. Chem II">Med. Chem II</option>
-      <option value="Ph. Cog. & Phytochem. II">Ph. Cog. & Phytochem. II</option>
-      <option value="Ph. Cology II">Ph. Cology II</option>
-      <option value="Industrial Pharmacy I">Industrial Pharmacy I</option>
-      <option value="Ph. Jurisprudence">Ph. Jurisprudence</option>
-      <option value="Other">Other</option>
+      <option value="Math">Med. Chem II</option>
+      <option value="Physics">Ph. Cog. & Phytochem. II</option>
+      <option value="Chemistry">Ph. Cology II</option>
+      <option value="Computer Science">Industrial Pharmacy I</option>
+      <option value="Computer Science">Ph. Jurisprudence</option>
+      <option value="Computer Science">Other</option>
     </select>
   </div>
-
   <div id="printHeader"></div>
-
+  
   <table id="attendanceTable">
     <thead>
       <tr>
@@ -122,15 +227,19 @@
         <th>Present</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+      <!-- Table rows are dynamically populated -->
+    </tbody>
   </table>
-
+  
   <div class="counts" id="attendanceCounts"></div>
+  
+  <!-- Pie Chart -->
   <canvas id="attendanceChart" style="max-width: 80%; margin-top: 20px;"></canvas>
-
-<script>
-const students = [ /* full list of students as in your existing code */ 
- { id: "AJU/230001", name: "BIKRAM KISHORE PANDA" },
+  
+  <script>
+    const students = [
+      { id: "AJU/230001", name: "BIKRAM KISHORE PANDA" },
             { id: "AJU/230003", name: "SAHIL PATI" },
             { id: "AJU/230005", name: "SUBODH KUMAR YADAV" },
             { id: "AJU/230007", name: "ANANT KUMAR" },
@@ -224,101 +333,183 @@ const students = [ /* full list of students as in your existing code */
             { id: "AJU/232328", name: "PRATIMA KUMARI " },
     ];
 
-
-let attendanceData = {};
-let chart;
-
-function populateTable() {
-  const tbody = document.querySelector('#attendanceTable tbody');
-  tbody.innerHTML = '';
-  attendanceData = JSON.parse(localStorage.getItem('attendanceData') || '{}');
-
-  students.forEach((student, index) => {
-    const row = tbody.insertRow();
-    row.insertCell().textContent = index + 1;
-    row.insertCell().textContent = student.id;
-    row.insertCell().textContent = student.name;
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = attendanceData[student.id] || false;
-    checkbox.addEventListener('change', () => {
-      attendanceData[student.id] = checkbox.checked;
-      localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+    let attendanceData = {};
+    let chart;
+    
+    // Populate the attendance table and restore saved data from localStorage
+    function populateTable() {
+      const tbody = document.getElementById('attendanceTable').getElementsByTagName('tbody')[0];
+      tbody.innerHTML = '';
+      const storedAttendance = localStorage.getItem("attendanceData");
+      attendanceData = storedAttendance ? JSON.parse(storedAttendance) : {};
+      
+      students.forEach((student, index) => {
+        const row = tbody.insertRow();
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+        const cell3 = row.insertCell(2);
+        const cell4 = row.insertCell(3);
+        
+        cell1.textContent = index + 1;
+        cell2.textContent = student.id;
+        cell3.textContent = student.name;
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        
+        if (attendanceData[student.id]) {
+          checkbox.checked = true;
+          row.style.backgroundColor = '#c8e6c9';
+          row.classList.add('present');
+        }
+        
+        checkbox.addEventListener('change', function () {
+          if (checkbox.checked) {
+            row.style.backgroundColor = '#c8e6c9';
+            row.classList.add('present');
+            attendanceData[student.id] = true;
+          } else {
+            row.style.backgroundColor = '';
+            row.classList.remove('present');
+            attendanceData[student.id] = false;
+          }
+          localStorage.setItem("attendanceData", JSON.stringify(attendanceData));
+          updateCounts();
+        });
+        cell4.appendChild(checkbox);
+      });
       updateCounts();
+    }
+    
+    // Update the attendance counts display and update the pie chart
+    function updateCounts() {
+      const total = students.length;
+      let presentCount = 0;
+      for (const key in attendanceData) {
+        if (attendanceData[key]) {
+          presentCount++;
+        }
+      }
+      const absentCount = total - presentCount;
+      document.getElementById('attendanceCounts').textContent =
+        `Present: ${presentCount}  |  Absent: ${absentCount}  |  Total Students: ${total} `;
+      
+      updateChart(presentCount, absentCount);
+    }
+    
+    // Update or create the pie chart and display percentages using datalabels
+    function updateChart(presentCount, absentCount) {
+      const ctx = document.getElementById('attendanceChart').getContext('2d');
+      if (chart) {
+        chart.data.datasets[0].data = [presentCount, absentCount];
+        chart.update();
+      } else {
+        chart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: ['Present', 'Absent'],
+            datasets: [{
+              data: [presentCount, absentCount],
+              backgroundColor: ['#4CAF50', '#f44336']
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'bottom'
+              },
+              datalabels: {
+                formatter: (value, context) => {
+                  let sum = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                  let percentage = ((value / sum) * 100).toFixed(1) + "%";
+                  return percentage;
+                },
+                color: '#fff'
+              }
+            }
+          },
+          plugins: [ChartDataLabels]
+        });
+      }
+    }
+    
+    // Update the header that will be printed (shows subject and current date/time)
+    function updatePrintHeader() {
+      const subjectElement = document.getElementById("subject");
+      const subjectValue = subjectElement.options[subjectElement.selectedIndex].text;
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString();
+      const formattedTime = now.toLocaleTimeString();
+      document.getElementById("printHeader").innerHTML =
+        `Subject: ${subjectValue} <br> Dated: ${formattedDate} at ${formattedTime}`;
+    }
+    
+    // Print attendance – update the print header and then call print
+    function printAttendance() {
+      updatePrintHeader();
+      window.print();
+    }
+    
+    // Reset attendance data
+    function resetAttendance() {
+      const checkboxes = document.querySelectorAll('#attendanceTable tbody input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+        const row = checkbox.closest('tr');
+        row.style.backgroundColor = '';
+        row.classList.remove('present');
+      });
+      localStorage.removeItem("attendanceData");
+      attendanceData = {};
+      updateCounts();
+    }
+    
+    // Share attendance: update header, set print mode, and generate PDF with a filename that includes today's date and subject name
+    document.getElementById("shareButton").addEventListener("click", function() {
+      updatePrintHeader();
+      document.body.classList.add("print-mode");
+      const element = document.body;
+      const subjectElement = document.getElementById("subject");
+      const subjectValue = subjectElement.options[subjectElement.selectedIndex].text;
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString().replace(/\//g, '-');
+      const filename = `${formattedDate}-${subjectValue}.pdf`;
+      
+      const opt = {
+        margin: 0.5,
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      
+      html2pdf().set(opt).from(element).outputPdf('blob').then(function(blob) {
+        document.body.classList.remove("print-mode");
+        
+        if (navigator.canShare && navigator.canShare({ files: [new File([blob], filename, { type: 'application/pdf' })] })) {
+          const file = new File([blob], filename, { type: 'application/pdf' });
+          navigator.share({
+            title: 'Attendance Report',
+            text: 'Please find the attendance report attached.',
+            files: [file],
+          })
+          .then(() => console.log('Share successful'))
+          .catch((error) => console.error('Error sharing:', error));
+        } else {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+      });
     });
-    row.insertCell().appendChild(checkbox);
-    if (attendanceData[student.id]) row.style.backgroundColor = '#c8e6c9';
-  });
-
-  updateCounts();
-}
-
-function updateCounts() {
-  const total = students.length;
-  const presentCount = Object.values(attendanceData).filter(Boolean).length;
-  const absentCount = total - presentCount;
-  document.getElementById('attendanceCounts').textContent = `Present: ${presentCount} | Absent: ${absentCount} | Total: ${total}`;
-  updateChart(presentCount, absentCount);
-}
-
-function updateChart(presentCount, absentCount) {
-  const ctx = document.getElementById('attendanceChart').getContext('2d');
-  if (chart) {
-    chart.data.datasets[0].data = [presentCount, absentCount];
-    chart.update();
-  } else {
-    chart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['Present', 'Absent'],
-        datasets: [{ data: [presentCount, absentCount], backgroundColor: ['#4CAF50', '#f44336'] }]
-      },
-      options: {
-        responsive: true,
-        plugins: { datalabels: { color: '#fff', formatter: (v, c) => ((v/c.chart.data.datasets[0].data.reduce((a,b)=>a+b,0))*100).toFixed(1)+'%' } }
-      },
-      plugins: [ChartDataLabels]
-    });
-  }
-}
-
-function resetAttendance() {
-  localStorage.removeItem('attendanceData');
-  attendanceData = {};
-  populateTable();
-}
-
-function printAttendance() {
-  const header = document.getElementById('printHeader');
-  const subject = document.getElementById('subject').selectedOptions[0].text;
-  header.innerHTML = `Subject: ${subject} <br> Dated: ${new Date().toLocaleString()}`;
-  window.print();
-}
-
-document.getElementById('shareButton').addEventListener('click', async () => {
-  const header = document.getElementById('printHeader');
-  const subject = document.getElementById('subject').selectedOptions[0].text;
-  header.innerHTML = `Subject: ${subject} <br> Dated: ${new Date().toLocaleString()}`;
-  document.body.classList.add('print-mode');
-
-  const blob = await html2pdf().set({ margin: 0.5, filename: `${new Date().toLocaleDateString()}-${subject}.pdf`, jsPDF: { unit: 'in', format: 'letter' } })
-    .from(document.body).outputPdf('blob');
-
-  document.body.classList.remove('print-mode');
-
-  if (navigator.canShare && navigator.canShare({ files: [new File([blob], `${subject}.pdf`, { type: 'application/pdf' })] })) {
-    await navigator.share({ title: 'Attendance Report', files: [new File([blob], `${subject}.pdf`, { type: 'application/pdf' })] });
-  } else {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${subject}.pdf`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-});
-
-window.onload = populateTable;
-</script>
+    
+    window.onload = function() {
+      populateTable();
+    }
+  </script>
 </body>
 </html>
